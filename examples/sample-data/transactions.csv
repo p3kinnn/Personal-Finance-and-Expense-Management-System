@@ -1,0 +1,5 @@
+id,type,amount,category,description,date,source,externalId
+1,INCOME,250000.00,SALARY,October salary,2026-10-01,MANUAL,
+2,EXPENSE,35000.00,FOOD,"Groceries, weekly",2026-10-02,MANUAL,
+3,EXPENSE,18000.00,TRANSPORT,Monthly transport,2026-10-03,MANUAL,
+4,EXPENSE,32000.00,SHOPPING,Clothing,2026-10-04,MANUAL,

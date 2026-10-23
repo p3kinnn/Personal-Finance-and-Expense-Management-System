@@ -1,0 +1,37 @@
+erDiagram
+    CATEGORY ||..o{ TRANSACTION : categorizes
+    CATEGORY ||..o{ BUDGET : limits_per_month
+    CATEGORY ||..o{ RECURRING_TRANSACTION : categorizes
+    RECURRING_TRANSACTION o|..o{ TRANSACTION : generates_logically
+    CATEGORY {
+        string name PK
+        string label
+        string type
+    }
+    TRANSACTION {
+        long id PK
+        string type
+        decimal amount
+        string category
+        string description
+        date date
+        string source
+        string externalId
+    }
+    BUDGET {
+        long id PK
+        string category
+        int year
+        int month
+        decimal limit
+    }
+    RECURRING_TRANSACTION {
+        long id PK
+        string type
+        decimal amount
+        string category
+        string description
+        date startDate
+        boolean active
+        string lastProcessedMonth
+    }

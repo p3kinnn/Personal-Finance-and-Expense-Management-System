@@ -1,0 +1,52 @@
+# Architecture Diagram
+
+Solid arrows show calls/data flow. The model box represents shared values without a dependency back to services or UI. Strategy alternatives and notifier chains are selected by object composition. CSV and log files live in the configured data directory; exports have a separate directory.
+
+```mermaid
+flowchart TD
+    Main[Main: configuration and constructor wiring] --> UI[ConsoleUI: menus and input]
+    Main --> Startup[Startup recurring check]
+    Startup --> Recurring[RecurringTransactionService]
+    UI --> Tx[TransactionService]
+    UI --> Budget[BudgetService]
+    UI --> Recurring
+    UI --> Reports[ReportService]
+    UI --> Export[ReportExportService]
+    UI --> Import[BankImportService]
+    UI --> Notifications[NotificationService: history and event pipelines]
+    Reports --> Tx
+    Recurring --> Tx
+    Tx --> Budget
+    Tx --> TxRepo[TransactionRepository]
+    Budget --> TxRepo
+    Budget --> BudgetRepo[BudgetRepository]
+    Recurring --> RecRepo[RecurringTransactionRepository]
+    TxRepo --> CsvFile[CsvFile and Csv utility]
+    BudgetRepo --> CsvFile
+    RecRepo --> CsvFile
+    CsvFile --> Files[(Persistent CSV files)]
+    Export --> Strategy[ReportExportStrategy]
+    Strategy --> TXT[TxtExportStrategy]
+    Strategy --> CSV[CsvExportStrategy]
+    Strategy --> JSON[JsonExportStrategy]
+    TXT --> Out[(Export files)]
+    CSV --> Out
+    JSON --> Out
+    Import --> Provider[BankTransactionProvider]
+    Provider --> Adapter[BankAdapter]
+    Adapter --> Bank[FakeBankService: incompatible external API]
+    Import --> Tx
+    Tx --> Notifications
+    Budget --> Notifications
+    Recurring --> Notifications
+    Import --> Notifications
+    Notifications --> Decorators[Priority / Timestamp / FileLogging decorators]
+    Decorators --> Console[ConsoleNotifier]
+    Decorators --> Log[(notifications.log)]
+    UI -. reads .-> Domain[Immutable domain models and enums]
+    Tx -. uses .-> Domain
+    Reports -. produces Report .-> Domain
+    CsvFile -. stores mapped fields .-> Domain
+```
+
+[Standalone Mermaid source](architecture-diagram.mmd)
