@@ -76,6 +76,8 @@ mvn package
 python3 scripts/smoke_test.py
 ```
 
+Successful GitHub Actions runs also publish the executable JAR as the `personal-finance-manager-java17` artifact on the run page.
+
 The JUnit tests use temporary directories and a fixed clock; they do not read personal files. See [actual results and cases](docs/TESTING.md). GitHub Actions runs a Java 17 build and packaged-JAR check.
 
 ## Example walkthrough

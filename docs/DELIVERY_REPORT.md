@@ -169,7 +169,7 @@ To use the implementation branch before it is merged, check out `codex/implement
 java -jar target/personal-finance-manager-1.0.0.jar --data-dir work/demo-data --export-dir work/demo-exports
 ```
 
-IntelliJ IDEA Community: open `pom.xml` as a Maven project, select JDK 17, import dependencies, and run `com.personalfinance.app.Main`. Set the working directory to the project root. Optionally enter the data/export arguments in its run configuration. The Windows and Unix scripts launch the already-built JAR.
+IntelliJ IDEA Community: open `pom.xml` as a Maven project, select JDK 17, import dependencies, and run `com.personalfinance.app.Main`. Set the working directory to the project root. Optionally enter the data/export arguments in its run configuration. The Windows and Unix scripts launch the already-built JAR. Successful GitHub Actions runs publish the executable JAR as the `personal-finance-manager-java17` artifact; source is downloadable from the repository branch or commit.
 
 ## 9. Documentation
 
