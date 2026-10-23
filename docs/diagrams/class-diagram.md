@@ -1,0 +1,144 @@
+# Class Diagram
+
+Attributes on records denote public accessor properties; the actual record fields are private and immutable. Arrows show implemented interfaces, inheritance, retained collaborators, and dependencies. Utility helpers and some record attributes are omitted for readability; there are no invented repository interfaces.
+
+```mermaid
+classDiagram
+    class Main
+    class ConsoleUI
+    class Transaction {
+        +long id
+        +TransactionType type
+        +BigDecimal amount
+        +Category category
+        +String description
+        +LocalDate date
+        +TransactionSource source
+        +String externalId
+    }
+    class Budget {
+        +long id
+        +Category category
+        +YearMonth month
+        +BigDecimal limit
+    }
+    class BudgetStatus {
+        +BigDecimal spent
+        +remaining() BigDecimal
+        +usage() BigDecimal
+        +level() String
+    }
+    class RecurringTransaction {
+        +long id
+        +LocalDate startDate
+        +boolean active
+        +YearMonth lastProcessedMonth
+        +processed(YearMonth) RecurringTransaction
+        +disabled() RecurringTransaction
+    }
+    class Report {
+        +YearMonth month
+        +BigDecimal totalIncome
+        +BigDecimal totalExpenses
+        +int transactionCount
+        +netBalance() BigDecimal
+    }
+    class BankImportRecord
+    class Category {
+        <<enumeration>>
+    }
+    class TransactionService
+    class BudgetService
+    class RecurringTransactionService
+    class ReportService
+    class NotificationService
+    class TransactionRepository
+    class BudgetRepository
+    class RecurringTransactionRepository
+    class CsvFile
+    class ReportExportService {
+        +setStrategy(ReportExportStrategy)
+        +exportReport(Report, Path)
+    }
+    class ReportExportStrategy {
+        <<interface>>
+        +export(Report, Path)
+    }
+    class TxtExportStrategy
+    class CsvExportStrategy
+    class JsonExportStrategy
+    class BankTransactionProvider {
+        <<interface>>
+        +fetchTransactions() List~BankImportRecord~
+    }
+    class FakeBankService {
+        +getBankOperations() List~ExternalBankRecord~
+    }
+    class ExternalBankRecord
+    class BankAdapter
+    class BankImportService
+    class Notifier {
+        <<interface>>
+        +notify(String)
+    }
+    class ConsoleNotifier
+    class NotifierDecorator {
+        <<abstract>>
+        #Notifier wrapped
+    }
+    class TimestampNotifierDecorator
+    class PriorityNotifierDecorator
+    class FileLoggingNotifierDecorator
+    Main ..> ConsoleUI : constructs
+    Main ..> TransactionService : wires services
+    ConsoleUI --> TransactionService
+    ConsoleUI --> BudgetService
+    ConsoleUI --> RecurringTransactionService
+    ConsoleUI --> ReportService
+    ConsoleUI --> ReportExportService
+    ConsoleUI --> BankImportService
+    ConsoleUI --> NotificationService
+    TransactionService --> TransactionRepository
+    TransactionService --> BudgetService
+    TransactionService --> NotificationService
+    BudgetService --> BudgetRepository
+    BudgetService --> TransactionRepository
+    BudgetService --> NotificationService
+    BudgetStatus --> Budget
+    Transaction --> Category
+    Budget --> Category
+    RecurringTransaction --> Category
+    Report ..> Category
+    RecurringTransactionService --> RecurringTransactionRepository
+    RecurringTransactionService --> TransactionService
+    RecurringTransactionService --> NotificationService
+    ReportService --> TransactionService
+    ReportService ..> Report : creates
+    TransactionRepository ..> Transaction
+    BudgetRepository ..> Budget
+    RecurringTransactionRepository ..> RecurringTransaction
+    TransactionRepository *-- CsvFile
+    BudgetRepository *-- CsvFile
+    RecurringTransactionRepository *-- CsvFile
+    ReportExportService o-- ReportExportStrategy : selected strategy
+    ReportExportStrategy <|.. TxtExportStrategy
+    ReportExportStrategy <|.. CsvExportStrategy
+    ReportExportStrategy <|.. JsonExportStrategy
+    ReportExportStrategy ..> Report
+    BankTransactionProvider <|.. BankAdapter
+    BankAdapter o-- FakeBankService
+    FakeBankService ..> ExternalBankRecord : returns
+    BankAdapter ..> BankImportRecord : converts to
+    BankImportService --> BankTransactionProvider
+    BankImportService --> TransactionService
+    BankImportService --> NotificationService
+    Notifier <|.. ConsoleNotifier
+    Notifier <|.. NotifierDecorator
+    NotifierDecorator o-- Notifier : wraps
+    NotifierDecorator <|-- TimestampNotifierDecorator
+    NotifierDecorator <|-- PriorityNotifierDecorator
+    NotifierDecorator <|-- FileLoggingNotifierDecorator
+    NotificationService o-- Notifier : normal and important
+```
+
+[Standalone Mermaid source](class-diagram.mmd)
